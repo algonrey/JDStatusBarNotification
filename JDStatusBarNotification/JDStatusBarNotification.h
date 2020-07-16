@@ -173,6 +173,10 @@ typedef JDStatusBarStyle*(^JDPrepareStyleBlock)(JDStatusBarStyle *style);
  */
 + (BOOL)isVisible;
 
+
++ (void) setStandardHeight:(NSInteger)height;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -35,6 +35,9 @@
 @property (nonatomic, weak) JDStatusBarStyle *activeStyle;
 @property (nonatomic, strong) JDStatusBarStyle *defaultStyle;
 @property (nonatomic, strong) NSMutableDictionary *userStyles;
+
+@property (nonatomic, assign) NSInteger standardHeight;
+
 @end
 
 @implementation JDStatusBarNotification
@@ -42,6 +45,7 @@
 @synthesize overlayWindow = _overlayWindow;
 @synthesize progressView = _progressView;
 @synthesize topBar = _topBar;
+@synthesize standardHeight = _standardHeight;
 
 #pragma mark Class methods
 
@@ -134,6 +138,11 @@
 + (BOOL)isVisible;
 {
   return [[self sharedInstance] isVisible];
+}
+
+
++ (void)setStandardHeight:(NSInteger)height{
+    [[self sharedInstance] setStandardHeight:height];
 }
 
 #pragma mark Implementation
@@ -232,6 +241,9 @@
   textLabel.font = style.font;
   textLabel.accessibilityLabel = status;
   textLabel.text = status;
+    textLabel.numberOfLines = 0;
+    textLabel.adjustsFontSizeToFitWidth = YES;
+    textLabel.minimumScaleFactor = 5;
 
   if (style.textShadow) {
     textLabel.shadowColor = style.textShadow.shadowColor;
@@ -533,7 +545,10 @@ static CGFloat topBarHeightAdjustedForIphoneX(JDStatusBarStyle *style, CGFloat h
 
   // adjust height for iPhone X
   height = topBarHeightAdjustedForIphoneX(self.activeStyle ?: self.defaultStyle, height);
-
+  if (JDStatusBarRootVCLayoutMargin().top == 0) {
+      height += _standardHeight;
+  }
+    
   _topBar.frame = CGRectMake(0, yPos, width, height);
 }
 
